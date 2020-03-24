@@ -1,0 +1,217 @@
+//Brayan Fuentes Lopez	
+//CECS 282-05
+//Prog 02- myDate Object
+//March 3, 2020
+#include "main.h"
+#include "myDate.h"
+#include <iostream>
+#include <iomanip>
+#include <cstring>
+#include <string>
+#include <time.h>
+#include <stdio.h>
+#include <stdlib.h>
+
+using namespace std;
+
+struct Student
+{
+	char Name[26];
+	int studentID;
+	char grade;
+	myDate birthday;
+	string homeTown;
+	
+};
+
+
+void fill(Student arr[])
+{
+	
+	for (int i = 0; i < 10; i++)
+	{
+		Student stud;
+		char names [10][26] = { "Peter Parker", "Fred Flintstone","Sponge Bob", "Tom Thumb", "Bruce Wayne","Clark Kent","River Mullen", "Curtis Mooney","Stephen Jackson","Nichola Hampton"};
+		char grades[5] = { 'A','B','C','D','F' };
+		string towns[10] = { "Chicago","Charleston","Las Vegas","Seattle","Washington","New Orleans","San Francisco","New York City","Los Angeles","Long Beach" };
+		stud.studentID = rand() % 8999 + 1000;
+		int index = rand() % 5;
+		stud.grade = grades[index];
+		stud.homeTown = towns[i];
+		strcpy_s(stud.Name,names[i]);
+		myDate bday(1, 1, 1999);
+		bday.increaseDate(rand() % 2191);
+		stud.birthday = bday;
+		arr[i] = stud;
+	}
+};
+void displayStudent(Student arr[])
+{
+	cout << left <<setw(16) << "Name" << setw(16) << "Student ID" <<setw(10)<< "Grade"<< setw(22) << "Birthday"<<"HomeTown"<<endl;
+	for (int i = 0; i < 10; i++)
+	{
+		cout << left << setw(16)<<arr[i].Name << setw(16) << arr[i].studentID << setw(10) << arr[i].grade<<setw(22)<< arr[i].birthday.toString() <<arr[i].homeTown <<  endl;
+	}
+};
+void displayMenu()
+{
+	cout << "1) Display list sorted by Name" << endl;
+	cout << "2) Display list sorted by Student ID" << endl;
+	cout << "3) Display list sorted by Grade" << endl;
+	cout << "4) Display list sorted by Birthday" << endl;
+	cout << "5) Display list sorted by Home Town" << endl;
+	cout << "6) Quit" << endl;
+}
+void displayById(Student stud[],int n )
+{
+	for (int i = 0; i < n-1; i++)
+	{
+		int min = i;
+		for (int a = i + 1; a < n; a++)
+		{
+			if (stud[a].studentID < stud[min].studentID)
+			{
+				min = a;
+			}
+		}
+		Student temp = stud[min];
+		stud[min] = stud[i];
+		stud[i] = temp;
+	}
+
+	cout << left << setw(16) << "Name" << setw(16) << "Student ID" << setw(10) << "Grade" << setw(22) << "Birthday" << "HomeTown" << endl;
+	for (int b = 0; b < 10; b++)
+	{
+		cout << left << setw(16) << stud[b].Name << setw(16) << stud[b].studentID << setw(10) << stud[b].grade << setw(22) << stud[b].birthday.toString() << stud[b].homeTown << endl;
+	}
+}
+void displaybyName(Student stud[], int n)
+{
+	for (int i = 0; i < n - 1; i++)
+	{
+		int min = i;
+		for (int a = i + 1; a < n; a++)
+		{
+			if(strcmp(stud[a].Name,stud[min].Name) < 0)
+			{
+				min = a;
+			}
+		}
+		Student temp = stud[min];
+		stud[min] = stud[i];
+		stud[i] = temp;
+	}
+	cout << left << setw(16) << "Name" << setw(16) << "Student ID" << setw(10) << "Grade" << setw(22) << "Birthday" << "HomeTown" << endl;
+	for (int b = 0; b < 10; b++)
+	{
+		cout << left << setw(16) << stud[b].Name << setw(16) << stud[b].studentID << setw(10) << stud[b].grade << setw(22) << stud[b].birthday.toString() << stud[b].homeTown << endl;
+	}
+}
+void displaybyTown(Student stud[], int n)
+{
+	for (int i = 0; i < n - 1; i++)
+	{
+		int min = i;
+		for (int a = i + 1; a < n; a++)
+		{
+			if (stud[a].homeTown.compare(stud[min].homeTown) < 0)
+			{
+				min = a;
+			}
+		}
+		Student temp = stud[min];
+		stud[min] = stud[i];
+		stud[i] = temp;
+	}
+	cout << left << setw(16) << "Name" << setw(16) << "Student ID" << setw(10) << "Grade" << setw(22) << "Birthday" << "HomeTown" << endl;
+	for (int b = 0; b < 10; b++)
+	{
+		cout << left << setw(16) << stud[b].Name << setw(16) << stud[b].studentID << setw(10) << stud[b].grade << setw(22) << stud[b].birthday.toString() << stud[b].homeTown << endl;
+	}
+}
+
+void displayByBirthday(Student stud[] , int n)
+{
+	for (int i = 0; i < n - 1; i++)
+	{
+		int min = i;
+		for (int a = i + 1; a < n; a++)
+		{
+			int minBday = stud[min].birthday.Greg2Julian(stud[min].birthday.getMonth(), stud[min].birthday.getDay(), stud[min].birthday.getYear());
+			int aBday = stud[a].birthday.Greg2Julian(stud[a].birthday.getMonth(), stud[a].birthday.getDay(), stud[a].birthday.getYear());
+			if (aBday<minBday)
+			{
+				min = a;
+			}
+		}
+		Student temp = stud[min];
+		stud[min] = stud[i];
+		stud[i] = temp;
+	}
+
+	cout << left << setw(16) << "Name" << setw(16) << "Student ID" << setw(10) << "Grade" << setw(22) << "Birthday" << "HomeTown" << endl;
+	for (int b = 0; b < 10; b++)
+	{
+		cout << left << setw(16) << stud[b].Name << setw(16) << stud[b].studentID << setw(10) << stud[b].grade << setw(22) << stud[b].birthday.toString() << stud[b].homeTown << endl;
+	}
+}
+
+void displaybyGrade(Student stud[], int n)
+{
+	for (int i = 0; i < n - 1; i++)
+	{
+		int min = i;
+		for (int a = i + 1; a < n; a++)
+		{
+			if(stud[a].grade < stud[min].grade)
+			{
+				min = a;
+			}
+		}
+		Student temp = stud[min];
+		stud[min] = stud[i];
+		stud[i] = temp;
+	}
+	cout << left << setw(16) << "Name" << setw(16) << "Student ID" << setw(10) << "Grade" << setw(22) << "Birthday" << "HomeTown" << endl;
+	for (int b = 0; b < 10; b++)
+	{
+		cout << left << setw(16) << stud[b].Name << setw(16) << stud[b].studentID << setw(10) << stud[b].grade << setw(22) << stud[b].birthday.toString() << stud[b].homeTown << endl;
+	}
+}
+
+int main(int argc, const char* argv[])
+{
+	srand(time(0));
+	Student students[10];
+	fill(students);
+	displayStudent(students);
+	bool loop = true;
+	while (loop)
+	{
+		int input;
+		displayMenu();
+		cin >> input;
+		switch (input)
+		{
+		case 1:
+			displaybyName(students, 10);
+			break;
+		case 2:
+			displayById(students,10);
+			break;
+		case 3:
+			displaybyGrade(students, 10);
+			break;
+		case 4:
+			displayByBirthday(students, 10);
+			break;
+		case 5:
+			displaybyTown(students, 10);
+			break;
+		case 6:
+			loop = false;
+			break;
+		}
+	}
+	
+};
