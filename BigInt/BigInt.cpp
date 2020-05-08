@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <map>
 using namespace std;
 
 class BigInt
@@ -8,10 +9,11 @@ class BigInt
 private:
 	vector<char> num;
 public:
+	BigInt();
 	BigInt(string s);
 	BigInt(int n);
 	void print();
-	BigInt operator-(int n );
+	BigInt operator-(int n);
 	BigInt operator-(BigInt n);
 	BigInt operator+(BigInt n)const;
 	BigInt operator+(int n);
@@ -21,61 +23,86 @@ public:
 	bool operator <= (int n);
 	bool operator <= (BigInt n);
 	BigInt operator ++(int);
-	friend ostream& operator<< (ostream&stream,  BigInt n);
-	
+	friend ostream& operator<< (ostream& stream, BigInt n);
+
 
 };
-
 int goldRabbits(int n)
 {
+	cout << "n: " << n << " : ";
+	static map<int, int>m;
+	if (n == 1 || n == 0)
 	{
-
-		if (n == 0 || n == 1) // base case
-
-			return 1;
-
-		else
-
-			return goldRabbits(n - 1) + goldRabbits(n - 2); // general case
-
+		int temp = 1;
+		m[n] = temp;
 	}
+	else if (n > 1)
+	{
+		int temp = m[n - 1] + m[n - 2];
+		m[n] = temp;
+	}
+	return m[n];
 }
 
-BigInt goldRabbits(BigInt n )
+BigInt goldRabbits(BigInt n)
 {
-	if (n == 0 || n == 1) // base case
+	//cout<<"n: "<<n<<" : ";
+	static map<BigInt, BigInt> fibMap;
+	BigInt zero(0);
+	BigInt one(1);
+	if (n == zero || n == one)
+	{
+		BigInt temp(1);
+		fibMap[n] = temp;
+	}
+	else if (!(n == zero && n == one))
+	{
+		BigInt temp = fibMap[n - 1] + fibMap[n - 2];
+		fibMap[n] = temp;
+	}
 
-		return 1;
-
-	else
-
-		return goldRabbits(n - 1) + goldRabbits(n - 2); // general case
+	map<BigInt, BigInt>::iterator it;
+	return fibMap[n];
 }
 
-void pause() 
-{ 
+
+void pause()
+{
 	cout << "Press Enter to continue...";
-	getchar(); 
+	getchar();
 }
 
 int main()
 {
-	/*
 	BigInt B1("123456789123456789123456789123456789");
 	BigInt B2(B1);
 	BigInt MAX(INT_MAX);
 	cout << "B1:" << B1 << "\nB2:" << B2 << "\nMAX:" << MAX << endl;
+	pause();
 	cout << "\nB1:";
 	B1.print();
 	cout << endl;
-	*/
-	BigInt n(999),x(165);
-	BigInt b = n  - x; 
-	cout << b << endl;
-	for (BigInt i = 0; i <= 20; i++)
+	pause();
+
+	for (BigInt i = 0; i <= 3000; i++) // uncomment this
+	//for(int i=0; i<=3000; i++) // comment this out
 	{
-		cout << i << endl;
+		cout << "\ngoldRabbits(" << i << ") = " << goldRabbits(i);
 	}
+	pause();
+
+	cout << "\nThis is the value of goldRabbits(3000)\n\n";
+	BigInt gR3000 = goldRabbits(BigInt(3000));
+	gR3000.print();
+
+	pause();
+}
+
+
+
+BigInt::BigInt()
+{
+	num.push_back(0);
 }
 
 BigInt::BigInt(string s)
@@ -86,7 +113,7 @@ BigInt::BigInt(string s)
 	}
 }
 
- BigInt :: BigInt(int n)
+BigInt::BigInt(int n)
 {
 	while (n > 9)
 	{
@@ -118,7 +145,7 @@ BigInt BigInt :: operator+(int n)
 BigInt BigInt::operator+(BigInt n) const
 {
 	BigInt result(*this);
-	
+
 	while (n.num.size() != result.num.size()) {
 		if (n.num.size() > result.num.size())
 		{
@@ -128,10 +155,10 @@ BigInt BigInt::operator+(BigInt n) const
 			n.num.push_back(0);
 		}
 	}
-	string s; 
+	string s;
 	char carry = 0;
-	
-	for (int i = 0;i < result.num.size(); i++)
+
+	for (int i = 0; i < result.num.size(); i++)
 	{
 		int sum = n.num[i] + result.num[i];
 		if (sum > 9)
@@ -175,9 +202,9 @@ BigInt BigInt:: operator-(BigInt n)
 			n.num.push_back(0);
 		}
 	}
-	for (int i = 0; i < temp.num.size(); i++) 
+	for (int i = 0; i < temp.num.size(); i++)
 	{
-		if (temp.num[i] < n.num[i]) 
+		if (temp.num[i] < n.num[i])
 		{
 			temp.num[i];
 			temp.num[i + 1] -= 1;
@@ -188,13 +215,14 @@ BigInt BigInt:: operator-(BigInt n)
 			temp.num[i] -= n.num[i];
 		}
 
-		if (temp.num[i] == 0 && n.num[i] == 0 && i == temp.num.size() - 1) 
+		if (temp.num[i] == 0 && n.num[i] == 0 && i == temp.num.size() - 1)
 		{
 			temp.num.erase(temp.num.end() - 1);
 		}
 	}
 	return temp;
 }
+
 
 
 bool BigInt::operator==(int n)
@@ -245,34 +273,31 @@ bool BigInt:: operator<(const BigInt& n) const
 	{
 		return false;
 	}
-	else if(x.num.size() == n.num.size())
+	else if (x.num.size() == n.num.size())
 	{
 		for (int i = num.size() - 1; i > -1; i--) {
-			if ((int)x.num[i] > (int)n.num[i]) 
+			if ((int)x.num[i] > (int)n.num[i])
 			{
 				return false;
 			}
-			else if ((int)x.num[i] < (int)n.num[i]) 
+			else if ((int)x.num[i] < (int)n.num[i])
 			{
 				return true;
 			}
 		}
 	}
 }
-bool BigInt ::  operator <= (BigInt n)
+bool BigInt::operator<=(BigInt B)
 {
-	bool b = true;
-	BigInt x(*this);
-
-	if (x == n || x.num.size() < n.num.size())
+	if (B == *this)
 	{
 		return true;
 	}
-	else if (x.num.size() > n.num.size())
-	{
-		return false;
+	else {
+		return *this < B;
 	}
 }
+
 
 bool BigInt:: operator <= (int n)
 {
@@ -293,7 +318,7 @@ BigInt BigInt :: operator ++(int)
 	return *this = *this + 1;
 }
 
-ostream& operator<< (ostream& stream,  BigInt n)
+ostream& operator<< (ostream& stream, BigInt n)
 {
 	vector<char> ::reverse_iterator rit;
 	for (rit = n.num.rbegin(); rit != n.num.rend(); rit++)
@@ -303,4 +328,3 @@ ostream& operator<< (ostream& stream,  BigInt n)
 	return stream;
 
 }
-
