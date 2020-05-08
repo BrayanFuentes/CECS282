@@ -12,7 +12,7 @@ public:
 	BigInt(int n);
 	void print();
 	BigInt operator-(int n );
-	BigInt operator-(BigInt n)const;
+	BigInt operator-(BigInt n);
 	BigInt operator+(BigInt n)const;
 	BigInt operator+(int n);
 	bool operator ==(int n);
@@ -60,6 +60,7 @@ void pause()
 
 int main()
 {
+	/*
 	BigInt B1("123456789123456789123456789123456789");
 	BigInt B2(B1);
 	BigInt MAX(INT_MAX);
@@ -67,7 +68,14 @@ int main()
 	cout << "\nB1:";
 	B1.print();
 	cout << endl;
-
+	*/
+	BigInt n(999),x(165);
+	BigInt b = n  - x; 
+	cout << b << endl;
+	for (BigInt i = 0; i <= 20; i++)
+	{
+		cout << i << endl;
+	}
 }
 
 BigInt::BigInt(string s)
@@ -149,138 +157,63 @@ BigInt BigInt::operator+(BigInt n) const
 
 BigInt BigInt:: operator-(int m)
 {
-	BigInt result(*this);
-	BigInt n(m);
-	while (n.num.size() != result.num.size()) {
-		if (n.num.size() > result.num.size())
-		{
-			result.num.push_back(0);
-		}
-		else {
-			n.num.push_back(0);
-		}
-	}
-	string s;
-
-	for (int i = 0; i < result.num.size(); i++)
-	{
-		int t = (int)result.num[i];
-		if (result.num[i] < n.num[i])
-		{
-			result.num[i] += 10;
-			result.num[i + 1] -= 1;
-			int sub = result.num[i] - n.num[i];
-			s.insert(0, to_string(sub));
-		}
-		else if (i = result.num.size() - 1)
-		{
-			if (result.num[i] == 0 && n.num[i] == 0)
-			{
-				break;
-			}
-			else
-			{
-				int sub = result.num[i] - n.num[i];
-				s.insert(0, to_string(sub));
-			}
-		}
-		else
-		{
-			int sub = result.num[i] - n.num[i];
-			s.insert(0, to_string(sub));
-		}
-	}
-	return BigInt(s);
+	BigInt x(m);
+	*this = *this - x;
+	return *this;
 }
 
 
-BigInt BigInt:: operator-(BigInt n)const
+BigInt BigInt:: operator-(BigInt n)
 {
-	BigInt result(*this);
-
-	while (n.num.size() != result.num.size()) {
-		if (n.num.size() > result.num.size())
+	BigInt temp(*this);
+	while (n.num.size() != temp.num.size()) {
+		if (n.num.size() > temp.num.size())
 		{
-			result.num.push_back(0);
+			temp.num.push_back(0);
 		}
 		else {
 			n.num.push_back(0);
 		}
 	}
-	string s;
-
-	for (int i = 0; i < result.num.size(); i++)
+	for (int i = 0; i < temp.num.size(); i++) 
 	{
-		int t = (int)result.num[i];
-		if (result.num[i] < n.num[i])
+		if (temp.num[i] < n.num[i]) 
 		{
-			result.num[i] += 10;
-			result.num[i + 1] -= 1;
-			int sub = result.num[i]-n.num[i];
-			s.insert(0, to_string(sub));
-		}
-		else if (i = result.num.size() - 1)
-		{
-			if (result.num[i] == 0 && n.num[i] ==0)
-			{
-				break;
-			}
-			else
-			{
-				int sub = result.num[i] - n.num[i];
-				s.insert(0, to_string(sub));
-			}
+			temp.num[i];
+			temp.num[i + 1] -= 1;
+			temp.num[i] -= n.num[i];
 		}
 		else
 		{
-			int sub = result.num[i] - n.num[i];
-			s.insert(0, to_string(sub));
+			temp.num[i] -= n.num[i];
+		}
+
+		if (temp.num[i] == 0 && n.num[i] == 0 && i == temp.num.size() - 1) 
+		{
+			temp.num.erase(temp.num.end() - 1);
 		}
 	}
-	return BigInt(s);
+	return temp;
 }
 
 
 bool BigInt::operator==(int n)
 {
-	BigInt other(n);
-	if (this->num.size() > other.num.size())
+	BigInt x(n);
+	BigInt y(n);
+	if (y == x)
+	{
+		return true;
+	}
+	else
 	{
 		return false;
-	}
-	else if (this->num.size() < other.num.size())
-	{
-		return false;
-	}
-	else if (this->num.size() == other.num.size())
-	{
-		for (int i = 0; i < other.num.size(); i++)
-		{
-			if (num[i] != other.num[i])
-			{
-				return false;
-				break;
-			}
-			else
-			{
-				return true;
-			}
-		}
-		
 	}
 }
 
 bool BigInt :: operator==(const BigInt& n) const
 {
-	if (this->num.size() > n.num.size())
-	{
-		return false;
-	}
-	else if (this->num.size() < n.num.size())
-	{
-		return false;
-	}
-	else if (this->num.size() == n.num.size())
+	if (this->num.size() == n.num.size())
 	{
 		for (int i = 0; i < n.num.size(); i++)
 		{
@@ -294,75 +227,55 @@ bool BigInt :: operator==(const BigInt& n) const
 				return true;
 			}
 		}
-
+	}
+	else
+	{
+		return false;
 	}
 }
 
 bool BigInt:: operator<(const BigInt& n) const
 {
 	BigInt x(*this);
-	bool t = true;
-	if(x == n)
+	if (x == n)
 	{
-		t=   false;
+		return false;
+	}
+	if (x.num.size() < n.num.size())
+	{
+		return true;
 	}
 	else if (x.num.size() > n.num.size())
 	{
-		t= false;
-	}
-	else if (x.num.size() < n.num.size())
-	{
-		t= true;
+		return false;
 	}
 	else
 	{
-		for (int i = num.size() - 1; i > -1; i--)
-		{
-			if (x.num[i] > n.num[i])
+		for (int i = num.size() - 1; i > -1; i--) {
+			if ((int)x.num[i] < (int)n.num[i]) 
 			{
-				t= false;
+				return true;
 			}
-			else if(x.num[i] < n.num[i])
+			else if ((int)x.num[i] > (int)n.num[i]) 
 			{
-				t = true;
+				return false;
 			}
 		}
 	}
-	return t;
 }
-
 bool BigInt ::  operator <= (BigInt n)
 {
 	bool b = true;
 	BigInt x(*this);
 
-	if (x == n)
+	if (x == n || x.num.size() < n.num.size())
 	{
-		b = true;
+		return true;
 	}
 	else if (x.num.size() > n.num.size())
 	{
-		b = false;
+		return false;
 	}
-	else if (x.num.size() < n.num.size())
-	{
-		b = true;
-	}
-	else
-	{
-		for (int i = num.size() - 1; i > -1; i--)
-		{
-			if (x.num[i] > n.num[i])
-			{
-				b = false;
-			}
-			else if (x.num[i] < n.num[i])
-			{
-				b = true;
-			}
-		}
-	}
-	return b;
 }
 
 bool BigInt:: operator <= (int n)
@@ -378,7 +291,6 @@ bool BigInt:: operator <= (int n)
 		return false;
 	}
 }
-
 
 BigInt BigInt :: operator ++(int)
 {
