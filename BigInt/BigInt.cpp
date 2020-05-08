@@ -237,10 +237,6 @@ bool BigInt :: operator==(const BigInt& n) const
 bool BigInt:: operator<(const BigInt& n) const
 {
 	BigInt x(*this);
-	if (x == n)
-	{
-		return false;
-	}
 	if (x.num.size() < n.num.size())
 	{
 		return true;
@@ -249,16 +245,16 @@ bool BigInt:: operator<(const BigInt& n) const
 	{
 		return false;
 	}
-	else
+	else if(x.num.size() == n.num.size())
 	{
 		for (int i = num.size() - 1; i > -1; i--) {
-			if ((int)x.num[i] < (int)n.num[i]) 
-			{
-				return true;
-			}
-			else if ((int)x.num[i] > (int)n.num[i]) 
+			if ((int)x.num[i] > (int)n.num[i]) 
 			{
 				return false;
+			}
+			else if ((int)x.num[i] < (int)n.num[i]) 
+			{
+				return true;
 			}
 		}
 	}
